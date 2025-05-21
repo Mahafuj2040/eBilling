@@ -1,0 +1,184 @@
+/* Global Reset */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Navbar Styling */
+.navbar-nav {
+  margin-left: auto;
+}
+
+.nav-item a {
+  text-decoration: none;
+  color: #151618;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 20px;
+  padding: 10px;
+  position: relative;
+  transition: color 0.4s ease, background-color 0.4s ease;
+}
+
+.nav-item a::before {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  background: #28a745;
+  transition: width 0.4s ease;
+}
+
+.nav-item a:hover::before {
+  width: 100%;
+}
+
+.nav-item a:hover {
+  color: #28a745;
+  background-color: rgba(40, 167, 69, 0.1);
+  border-radius: 5px;
+  padding: 10px 15px;
+}
+
+a.btn {
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+a.btn-success {
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  padding: 8px 20px;
+}
+
+a.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Responsive Navbar */
+@media (max-width: 991px) {
+  .nav-item a {
+    margin-right: 0;
+    padding: 8px;
+  }
+}
+
+/* Search Section */
+.search {
+  padding: 4rem 0;
+  margin-top: 90px;
+  text-align: center;
+}
+
+.search-box {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 30px 20px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Uniform height & style for inputs and button */
+.search .form-control,
+.search button {
+  height: 60px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+}
+
+/* Clean input styles */
+.search .form-control {
+  border: 1px solid #ccc;
+  background-color: #fdfdfd;
+  padding-left: 15px;
+}
+
+/* Search button */
+.search button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.search button:hover {
+  background-color: #218838;
+}
+
+/* Responsive spacing */
+@media (max-width: 767px) {
+  .search .row.g-3 > div {
+    margin-bottom: 12px;
+  }
+
+  .search .form-control,
+  .search button {
+    height: 50px;
+  }
+}
+
+/* Card Styling */
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+  background-color: #fff;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.card img {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.card-body h5 {
+  font-size: 1.25rem;
+}
+
+.card-price {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.card .btn {
+  background-color: #28a745;
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.card .btn:hover {
+  background-color: #218838;
+}
+
+/* Filter Section Background */
+.filter-section {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+}
+
+/* Product Image Sizing */
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 150px;
+  }
+}
