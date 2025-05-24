@@ -24,7 +24,7 @@ function addToCart(product) {
   saveCart(cart);
 }
 
-// Update item quantity
+// Update item quantity in cart
 function updateQuantity(productId, change) {
   let cart = getCart();
   const item = cart.find(p => p.id === productId);
@@ -37,13 +37,13 @@ function updateQuantity(productId, change) {
   saveCart(cart);
 }
 
-// Remove from cart
+// Remove product from cart
 function removeFromCart(productId) {
   const cart = getCart().filter(p => p.id !== productId);
   saveCart(cart);
 }
 
-// Update Cart UI
+// Update cart UI: items list, subtotal, count badge
 function updateCartUI() {
   const cart = getCart();
   const container = document.getElementById('cart-items-container');
@@ -84,7 +84,7 @@ function updateCartUI() {
   subtotalEl.textContent = `৳${subtotal.toFixed(2)}`;
 }
 
-// Render products on the page
+// Render products in product list container
 function renderProducts(products) {
   const list = document.getElementById('product-list');
   list.innerHTML = '';
@@ -124,7 +124,7 @@ function renderProducts(products) {
   });
 }
 
-// Live search function
+// Live search filter function
 function handleLiveSearch() {
   const searchInput = document.querySelector('.search input').value.trim().toLowerCase();
 
@@ -144,7 +144,7 @@ function handleLiveSearch() {
   renderProducts(filteredProducts);
 }
 
-// ✅ Server-side PDF Receipt Download
+// Download PDF receipt from server
 async function downloadReceipt() {
   const cart = getCart();
   if (cart.length === 0) {
@@ -168,7 +168,9 @@ async function downloadReceipt() {
     const a = document.createElement('a');
     a.href = url;
     a.download = "e-rashid-receipt.pdf";
+    document.body.appendChild(a);
     a.click();
+    a.remove();
     URL.revokeObjectURL(url);
   } catch (error) {
     console.error("Receipt download failed:", error);
@@ -176,7 +178,7 @@ async function downloadReceipt() {
   }
 }
 
-// Fetch and initialize products
+// Initial fetch of products from server and setup
 fetch('https://billing-project-server.onrender.com/api/products')
   .then(res => res.json())
   .then(products => {
@@ -186,9 +188,17 @@ fetch('https://billing-project-server.onrender.com/api/products')
   })
   .catch(err => console.error('Error loading products:', err));
 
-// Initialize search listeners after DOM is ready
+// Setup search listeners after DOM loaded
 document.addEventListener('DOMContentLoaded', () => {
   updateCartUI();
-  document.querySelector('.search input').addEventListener('input', handleLiveSearch);
-  document.querySelector('.search button').addEventListener('click', handleLiveSearch);
+
+  const searchInput = document.querySelector('.search input');
+  if (searchInput) {
+    searchInput.addEventListener('input', handleLiveSearch);
+  }
+
+  const searchButton = document.querySelector('.search button');
+  if (searchButton) {
+    searchButton.addEventListener('click', handleLiveSearch);
+  }
 });
