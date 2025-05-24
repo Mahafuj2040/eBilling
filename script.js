@@ -129,12 +129,10 @@ function handleLiveSearch() {
   const searchInput = document.querySelector('.search input').value.trim().toLowerCase();
 
   if (!searchInput) {
-    // Show all products if search input is empty
     renderProducts(allProducts);
     return;
   }
 
-  // Filter products by name, description, or category
   const filteredProducts = allProducts.filter(product => {
     return (
       product.name.toLowerCase().includes(searchInput) ||
@@ -146,7 +144,7 @@ function handleLiveSearch() {
   renderProducts(filteredProducts);
 }
 
-// Download receipt as PDF
+// ✅ Server-side PDF Receipt Download
 async function downloadReceipt() {
   const cart = getCart();
   if (cart.length === 0) {
@@ -154,57 +152,27 @@ async function downloadReceipt() {
     return;
   }
 
-  const receiptItemsEl = document.getElementById('receipt-items');
-  const receiptTotalEl = document.getElementById('receipt-total');
-  const receiptDateEl = document.getElementById('receipt-date');
-  const receiptEl = document.getElementById('receipt-content');
-
-  receiptItemsEl.innerHTML = '';
-  let subtotal = 0;
-
-  cart.forEach(item => {
-    const itemSubtotal = item.price * item.quantity;
-    subtotal += itemSubtotal;
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.quantity}</td>
-      <td>৳${item.price.toFixed(2)}</td>
-      <td>৳${itemSubtotal.toFixed(2)}</td>
-    `;
-    receiptItemsEl.appendChild(row);
-  });
-
-  receiptTotalEl.textContent = `৳${subtotal.toFixed(2)}`;
-  receiptDateEl.textContent = new Date().toLocaleString('bn-BD', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
-
-  // Show receipt content before generating PDF
-  receiptEl.style.display = 'block';
-
   try {
-    await html2pdf()
-      .from(receiptEl)
-      .set({
-        margin: 0.5,
-        filename: 'e-rashid-receipt.pdf',
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-      })
-      .save();
+    const res = await fetch('https://billing-project-server.onrender.com/api/generate-receipt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cart })
+    });
 
-    // Hide receipt content only after PDF is saved
-    receiptEl.style.display = 'none';
-  } catch (err) {
-    alert("PDF download failed. Please try again.");
-    console.error(err);
-    receiptEl.style.display = 'none';
+    if (!res.ok) {
+      throw new Error("Failed to generate receipt");
+    }
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "e-rashid-receipt.pdf";
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Receipt download failed:", error);
+    alert("Failed to download receipt. Try again.");
   }
 }
 
